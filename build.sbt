@@ -1,12 +1,12 @@
 import com.typesafe.sbt.SbtMultiJvm
 import com.typesafe.sbt.SbtMultiJvm.MultiJvmKeys.MultiJvm
-import sbtassembly.Plugin._
-import net.virtualvoid.sbt.graph.Plugin
+
+multiJvmSettings
 
 val project = Project(
   id = "triplerush-cluster-tests",
   base = file("."),
-  settings = Project.defaultSettings ++ SbtMultiJvm.multiJvmSettings ++  net.virtualvoid.sbt.graph.Plugin.graphSettings ++ Seq(
+  settings = Defaults.coreDefaultSettings ++ SbtMultiJvm.multiJvmSettings ++ Seq(
     organization := "io.cotiviti",
     name := "triplerush-cluster-tests",
     version := "0.0.1-SNAPSHOT",
@@ -15,15 +15,12 @@ val project = Project(
       "org.scala-lang" % "scala-library" % scalaVersion.value % "compile",
       "org.scalatest" %% "scalatest" % "2.2.4" % "test",
       "com.signalcollect" %% "triplerush" % "8.0.1",
-
       "com.typesafe.akka" %% "akka-remote-tests" % "2.4-M2",
-      "com.google.protobuf" % "protobuf-java" % "2.6.1",
       "com.typesafe" % "config" % "1.3.0"
     ),
-    //    dependencyOverrides += ("io.netty" % "netty" % "3.10.5.Final"),
-    javaOptions in (Test,run) += "-XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:+CMSIncrementalPacing -XX:+CMSIncrementalMode -XX:ParallelGCThreads=40 -XX:ParallelCMSThreads=40",
+    //    javaOptions in (Test,run) += "-XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:+CMSIncrementalPacing -XX:+CMSIncrementalMode -XX:ParallelGCThreads=40 -XX:ParallelCMSThreads=40",
     parallelExecution in Test := false,
-    parallelExecution in Global := false,
+    //    parallelExecution in Global := false,
     // make sure that MultiJvm test are compiled by the default test compilation
     compile in MultiJvm <<= (compile in MultiJvm) triggeredBy (compile in Test),
     // make sure that MultiJvm tests are executed by the default test target,
