@@ -1,4 +1,4 @@
-package com.triplerush.features
+package com.triplerush
 
 import akka.actor.{ActorRef, Props}
 import akka.cluster.Cluster
@@ -40,15 +40,16 @@ object MultiNodeTestConfig extends MultiNodeConfig {
   val clusterName = "ClusterNodeProvisionerSpec"
 
   nodeConfig(master) {
-    ConfigFactory.parseString(s"akka.remote.netty.tcp.port=$seedPort")}
-    // this configuration will be used for all nodes
-    // note that no fixed host names and ports are used
-    commonConfig(ConfigFactory.parseString(s"""akka.cluster.seed-nodes=["akka.tcp://"${clusterName}"@"${seedIp}":"${seedPort}]""")
-      .withFallback(ConfigFactory.load()))
+    ConfigFactory.parseString(s"akka.remote.netty.tcp.port=$seedPort")
   }
+  // this configuration will be used for all nodes
+  // note that no fixed host names and ports are used
+  commonConfig(ConfigFactory.parseString( s"""akka.cluster.seed-nodes=["akka.tcp://"${clusterName}"@"${seedIp}":"${seedPort}]""")
+    .withFallback(ConfigFactory.load()))
+}
 
 class ClusterNodeProvisionerSpec extends MultiNodeSpec(MultiNodeTestConfig) with STMultiNodeSpec
-with ImplicitSender with ScalaFutures{
+with ImplicitSender with ScalaFutures {
 
   import MultiNodeTestConfig._
 
