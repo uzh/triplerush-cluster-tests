@@ -15,13 +15,6 @@ import org.scalatest.time.{Millis, Seconds, Span}
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-trait STMultiNodeSpec extends MultiNodeSpecCallbacks with WordSpecLike with ShouldMatchers with BeforeAndAfterAll {
-
-  override def beforeAll() = multiNodeSpecBeforeAll()
-
-  override def afterAll() = multiNodeSpecAfterAll()
-}
-
 class ClusterSpecMultiJvmNode1 extends ClusterNodeProvisionerSpec
 
 class ClusterSpecMultiJvmNode2 extends ClusterNodeProvisionerSpec
