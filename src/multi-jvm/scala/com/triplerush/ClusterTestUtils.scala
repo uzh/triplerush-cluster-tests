@@ -1,9 +1,13 @@
 package com.triplerush
 
 import com.signalcollect.examples.ColoredVertex
+import com.signalcollect.triplerush.{TriplePattern, TripleRush}
+import com.signalcollect.triplerush.loading.TripleIterator
 import com.signalcollect.{ExecutionConfiguration, ExecutionInformation, Vertex, Graph}
 import com.signalcollect.configuration.ExecutionMode
 import com.signalcollect.interfaces.ModularAggregationOperation
+
+import scala.util.{Failure, Success, Try}
 
 class ModularAggregator(verify: Vertex[_, _, _, _] => Boolean) extends ModularAggregationOperation[Boolean] {
   val neutralElement = true
@@ -41,6 +45,19 @@ object ClusterTestUtils {
     }
     correct
   }
+
+  def testLoading(tr:TripleRush): Boolean ={
+    val resource = s"university0_0.nt"
+    val tripleStream = getClass.getResourceAsStream(resource)
+    val triplesAdded: Try[Unit] = Try {
+      tr.addTriples(TripleIterator(tripleStream))
+    }
+    val expectedCount = 25700
+    val count = tr.resultIteratorForQuery(Seq(TriplePattern(-1, -2, -3))).size
+    println("######################### count : " + count)
+    count == expectedCount
+  }
+
 }
 
 class VerifiedColoredVertex(id: Int, numColors: Int) extends ColoredVertex(id, numColors, 0, false) {
