@@ -26,7 +26,7 @@ object ClusterPageRankConfig extends MultiNodeConfig {
   val node1 = role("node1")
   val node2 = role("node2")
   val clusterName = "ClusterPageRankSpec"
-  val seedPort = 2558
+  val seedPort = 2559
 
   nodeConfig(provisioner) {
     MultiJvmConfig.provisionerCommonConfig(seedPort)

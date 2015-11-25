@@ -24,7 +24,7 @@ object ClusterVertexColoringConfig extends MultiNodeConfig {
   val node2 = role("node2")
 
   val clusterName = "ClusterVertexColoringSpec"
-  val seedPort = 2561
+  val seedPort = 2562
 
   nodeConfig(provisioner) {
     MultiJvmConfig.provisionerCommonConfig(seedPort)

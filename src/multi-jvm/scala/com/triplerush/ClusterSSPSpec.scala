@@ -26,7 +26,7 @@ object ClusterSSSPConfig extends MultiNodeConfig {
   val node2 = role("node2")
 
   val clusterName = "ClusterSSSPSpec"
-  val seedPort = 2560
+  val seedPort = 2563
 
   nodeConfig(provisioner) {
     MultiJvmConfig.provisionerCommonConfig(seedPort)
