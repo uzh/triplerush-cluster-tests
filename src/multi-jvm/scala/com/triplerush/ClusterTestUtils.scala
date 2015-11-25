@@ -48,17 +48,6 @@ object ClusterTestUtils {
     correct
   }
 
-  def createTriple(s: String, p: String, o: String): JenaTriple = {
-    val subj = NodeFactory.createURI(s)
-    val pred = NodeFactory.createURI(p)
-    val obj = if (o.startsWith("http://")) {
-      NodeFactory.createURI(o)
-    } else {
-      NodeFactory.createLiteral(o)
-    }
-    new JenaTriple(subj, pred, obj)
-  }
-
   def testLoadingAndQuerying(tr: TripleRush): Boolean = {
     val sparql = s"""
                     PREFIX foaf: <http://xmlns.com/foaf/0.1/>
