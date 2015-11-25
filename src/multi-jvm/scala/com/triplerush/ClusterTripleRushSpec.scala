@@ -42,7 +42,8 @@ object ClusterTripleRushConfig extends MultiNodeConfig {
         |  "com.signalcollect.triplerush.handlers.TripleRushEdgeAddedToNonExistentVertexHandlerFactory$" = 136,
         |  "com.signalcollect.triplerush.util.TripleRushStorage$" = 137,
         |  "com.signalcollect.triplerush.handlers.TripleRushUndeliverableSignalHandlerFactory$" = 138,
-        |  "com.signalcollect.triplerush.util.TripleRushWorkerFactory" = 139
+        |  "com.signalcollect.triplerush.util.TripleRushWorkerFactory" = 139,
+        |  "com.signalcollect.triplerush.BlockingIndexVertexEdge" = 140
         |    }""".stripMargin
 
     val largeTimeoutConfig =
@@ -88,35 +89,33 @@ with ImplicitSender with ScalaFutures {
     PatienceConfig(timeout = scaled(Span(300, Seconds)), interval = scaled(Span(1000, Millis)))
 
 
-
   "distributed triplerush" must {
     implicit val timeout = Timeout(30.seconds)
-    "deliver correct r" in within(100.seconds) {
+    "load triples and query triplerush store" in within(100.seconds) {
       val prefix = TestConfig.prefix
-     // val fiveCycleEdges = List((0, 1), (1, 2), (2, 3), (3, 4), (4, 0))
-     val mapperFactory = if (workers >= 2) {
-       system.log.info("TripleRush is using the RelievedNodeZeroTripleMapper factory.")
-       Some(RelievedNodeZeroTripleMapperFactory)
-     } else {
-       system.log.info(s"TripleRush is using the default triple mapper factory.")
-       None
-     }
+      val mapperFactory = if (workers >= 2) {
+        system.log.info("TripleRush is using the RelievedNodeZeroTripleMapper factory.")
+        Some(RelievedNodeZeroTripleMapperFactory)
+      } else {
+        system.log.info(s"TripleRush is using the default triple mapper factory.")
+        None
+      }
       runOn(provisioner) {
         val masterActor = system.actorOf(Props(classOf[ClusterNodeProvisionerActor], MultiJvmConfig.idleDetectionPropagationDelayInMilliseconds,
           prefix, workers), "ClusterMasterBootstrap")
         val nodeActorsFuture = (masterActor ? RetrieveNodeActors).mapTo[Array[ActorRef]]
         whenReady(nodeActorsFuture) { nodeActors =>
           assert(nodeActors.length == workers)
-                    val graphBuilder = new GraphBuilder[Long, Any]().
-                      withActorSystem(system).
-                      withPreallocatedNodes(nodeActors)
-                    val trInstance = TripleRush(
-                      graphBuilder = graphBuilder,
-                      tripleMapperFactory = mapperFactory,
-                      console = false)
+          val graphBuilder = new GraphBuilder[Long, Any]().
+            withActorSystem(system).
+            withPreallocatedNodes(nodeActors)
+          val trInstance = TripleRush(
+            graphBuilder = graphBuilder,
+            tripleMapperFactory = mapperFactory,
+            console = false)
 
-                    system.log.info(s"TripleRush has been initialized.")
-                    testLoading(trInstance) shouldBe true
+          system.log.info(s"TripleRush has been initialized.")
+          testLoadingAndQuerying(trInstance) shouldBe true
         }
       }
       enterBarrier("Clustered TR - test1 done")
