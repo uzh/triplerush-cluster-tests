@@ -14,7 +14,7 @@ val project = Project(
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-library" % scalaVersion.value % "compile",
       "org.scalatest" %% "scalatest" % "2.2.4" % "test",
-      "com.signalcollect" %% "triplerush" % "8.0.1",
+      "com.signalcollect" %% "triplerush" % "8.0.7",
       "com.typesafe.akka" %% "akka-remote-tests" % "2.4-M2",
       "com.typesafe" % "config" % "1.3.0"
     ),
