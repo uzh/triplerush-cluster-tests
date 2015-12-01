@@ -9,13 +9,11 @@ import com.signalcollect.GraphBuilder
 import com.signalcollect.nodeprovisioning.cluster.{ClusterNodeProvisionerActor, RetrieveNodeActors}
 import com.signalcollect.triplerush.TripleRush
 import com.signalcollect.triplerush.mapper.RelievedNodeZeroTripleMapperFactory
-import com.triplerush.ClusterTestUtils._
 import com.typesafe.config.ConfigFactory
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Millis, Seconds, Span}
-
 import scala.concurrent.duration._
-
+import TripleRushTestUtils._
 class ClusterTripleRushMultiJvmNode1 extends ClusterTripleRushSpec
 
 class ClusterTripleRushMultiJvmNode2 extends ClusterTripleRushSpec
@@ -115,7 +113,9 @@ with ImplicitSender with ScalaFutures {
             console = false)
 
           system.log.info(s"TripleRush has been initialized.")
-          testLoadingAndQuerying(trInstance) shouldBe true
+          //testLoadingAndQuerying(trInstance) shouldBe true
+          //testLoadingFromGzipFile(trInstance,"sample-uniq.gz") shouldBe true
+           testLoadingFromGzipFile(trInstance,"sample.gz") shouldBe true
         }
       }
       enterBarrier("Clustered TR - test1 done")

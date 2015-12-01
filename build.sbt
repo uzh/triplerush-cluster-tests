@@ -14,9 +14,13 @@ val project = Project(
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-library" % scalaVersion.value % "compile",
       "org.scalatest" %% "scalatest" % "2.2.4" % "test",
-      "com.signalcollect" %% "triplerush" % "8.0.7",
+      "com.signalcollect" %% "triplerush" % "8.0.10",
       "com.typesafe.akka" %% "akka-remote-tests" % "2.4-M2",
-      "com.typesafe" % "config" % "1.3.0"
+      "com.google.protobuf" % "protobuf-java" % "2.6.1",
+      "com.typesafe" % "config" % "1.3.0",
+      "org.apache.jena" % "jena-core" % "3.0.0",
+      "org.apache.jena" % "jena-arq" % "3.0.0"
+
     ),
     //    javaOptions in (Test,run) += "-XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:+CMSIncrementalPacing -XX:+CMSIncrementalMode -XX:ParallelGCThreads=40 -XX:ParallelCMSThreads=40",
     parallelExecution in Test := false,
